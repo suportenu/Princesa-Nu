@@ -20,6 +20,7 @@
             justify-content: center;
             align-items: center;
             font-family: 'Courier New', monospace;
+            touch-action: manipulation;
             overflow: hidden;
             position: fixed;
             width: 100%;
@@ -32,13 +33,16 @@
             display: flex;
             flex-direction: column;
             background: #0a0a1a;
+            justify-content: space-between;
         }
 
         canvas {
             display: block;
             width: 100%;
             flex: 1;
+            min-height: 0;
             background: #000;
+            cursor: pointer;
         }
 
         .info-panel {
@@ -48,29 +52,48 @@
             background: #000;
             padding: 8px 12px;
             color: #ffefb9;
+            font-weight: bold;
             font-size: 11px;
+            font-family: monospace;
             flex-wrap: wrap;
             gap: 5px;
+            z-index: 10;
             border-bottom: 2px solid #ff69b4;
         }
 
         .game-title {
             background: #000;
-            color: #fff;
+            color: #ffffff;
             padding: 3px 10px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 11px;
+            font-weight: bold;
             border: 1px solid #ff69b4;
         }
 
-        .phase-badge, .chance-badge, .lives-badge {
+        .phase-badge {
+            background: #ff69b4;
+            color: #fff;
             padding: 3px 10px;
-            border-radius: 20px;
+            border-radius: 25px;
             font-size: 10px;
         }
-        .phase-badge { background: #ff69b4; color: #fff; }
-        .chance-badge { background: #ffaa33; color: #2a1a00; }
-        .lives-badge { background: #ff4444; color: #fff; }
+
+        .chance-badge {
+            background: #ffaa33;
+            color: #2a1a00;
+            padding: 3px 10px;
+            border-radius: 25px;
+            font-size: 10px;
+        }
+        
+        .lives-badge {
+            background: #ff4444;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 25px;
+            font-size: 10px;
+        }
 
         .touch-controls {
             display: flex;
@@ -79,10 +102,19 @@
             padding: 10px 15px;
             background: rgba(0,0,0,0.85);
             gap: 15px;
+            z-index: 10;
         }
 
-        .dpad { display: flex; gap: 20px; }
-        .right-actions { display: flex; gap: 12px; }
+        .dpad {
+            display: flex;
+            gap: 20px;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
 
         .btn {
             width: 65px;
@@ -92,17 +124,41 @@
             font-weight: bold;
             border: none;
             cursor: pointer;
+            touch-action: manipulation;
             box-shadow: 0 3px 0 rgba(0,0,0,0.3);
         }
-        .btn:active { transform: translateY(2px); }
 
-        .btn-left, .btn-right { background: radial-gradient(#f5b062, #c26a22); color: #2d1c08; }
-        .btn-jump { background: radial-gradient(#e55a3a, #aa2a1a); color: white; width: 75px; font-size: 24px; }
-        .btn-torch { background: radial-gradient(#ff6600, #cc4400); color: white; width: 75px; font-size: 20px; }
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-left, .btn-right {
+            background: radial-gradient(circle at 30% 30%, #f5b062, #c26a22);
+            color: #2d1c08;
+        }
+
+        .btn-jump {
+            background: radial-gradient(circle at 30% 30%, #e55a3a, #aa2a1a);
+            color: white;
+            width: 75px;
+            font-size: 24px;
+        }
+
+        .btn-torch {
+            background: radial-gradient(circle at 30% 30%, #ff6600, #cc4400);
+            color: white;
+            width: 75px;
+            font-size: 20px;
+        }
 
         @media (max-width: 600px) {
             .btn { width: 55px; height: 55px; font-size: 24px; }
-            .btn-jump, .btn-torch { width: 65px; font-size: 20px; }
+            .btn-jump { width: 65px; font-size: 20px; }
+            .btn-torch { width: 65px; font-size: 18px; }
+            .touch-controls { padding: 8px 12px; gap: 12px; }
+            .info-panel { padding: 6px 10px; font-size: 10px; }
+            .game-title { font-size: 10px; }
         }
 
         .controls-footer {
@@ -124,33 +180,72 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
+            font-family: monospace;
         }
 
-        .result-box, .death-box {
+        .result-box {
             background: linear-gradient(135deg, #ffcc44, #ff9933);
+            padding: 25px 35px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 0 30px #ffaa00;
+            border: 3px solid #fff;
+        }
+        
+        .death-box {
+            background: linear-gradient(135deg, #331111, #110000);
             padding: 20px 30px;
             border-radius: 30px;
             text-align: center;
-            border: 3px solid #fff;
+            box-shadow: 0 0 30px #ff0000;
+            border: 3px solid #ff4444;
         }
-        .death-box { background: linear-gradient(135deg, #331111, #110000); border-color: #ff4444; }
-        .death-box h1 { color: #ff6666; font-size: 22px; }
-        .death-box p { color: white; font-size: 14px; margin: 10px 0; }
+        
+        .death-box h1 {
+            color: #ff6666;
+            font-size: 22px;
+        }
+        
+        .death-box p {
+            color: white;
+            font-size: 14px;
+            margin: 10px 0;
+        }
 
-        .result-box h1 { font-size: 22px; color: #2a1a00; }
-        .result-box .coin-count { font-size: 35px; color: #ffdd00; margin: 10px 0; }
+        .result-box h1 {
+            font-size: 22px;
+            color: #2a1a00;
+            margin-bottom: 15px;
+        }
 
-        .next-btn, .continue-btn {
+        .result-box .coin-count {
+            font-size: 48px;
+            color: #ffdd00;
+            text-shadow: 3px 3px 0 #aa6600;
+            margin: 15px 0;
+        }
+
+        .result-box .next-btn, .death-box .continue-btn {
             background: #2a6f3a;
             color: white;
             border: none;
-            padding: 8px 20px;
-            font-size: 14px;
+            padding: 10px 25px;
+            font-size: 16px;
             border-radius: 40px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
         }
-        .continue-btn { background: #ff4444; }
+        
+        .death-box .continue-btn {
+            background: #ff4444;
+        }
+        
+        #coinSoundCounter {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #2a1a00;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +271,7 @@
         </div>
     </div>
     <div class="controls-footer">
-        👆 Toque nos botões | 🔥 INFINITA | 👹 GUARDIÃO 50 tochas
+        👆 Toque nos botões | 🔥 TOCHA INFINITA | 👹 GUARDIÃO 50 tochas
     </div>
 </div>
 
@@ -184,20 +279,25 @@
 (function() {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    let W = 1000, H = 500;
+    
+    let W = 1000;
+    let H = 500;
     const GROUND_Y = 430;
     
     function resizeCanvas() {
         const container = canvas.parentElement;
-        canvas.width = container.clientWidth;
-        canvas.height = Math.min(window.innerHeight - 150, 500);
+        const width = container.clientWidth;
+        const availableHeight = window.innerHeight - 150;
+        canvas.width = width;
+        canvas.height = Math.min(availableHeight, 500);
         W = canvas.width;
         H = canvas.height;
     }
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
     resizeCanvas();
     
-    // ÁUDIO
+    // ========== ÁUDIO ==========
     let audioContext = null;
     let currentSongIndex = 0;
     let songTimeout = null;
@@ -215,7 +315,8 @@
         const map = {"C":-9,"C#":-8,"D":-7,"D#":-6,"E":-5,"F":-4,"F#":-3,"G":-2,"G#":-1,"A":0,"A#":1,"B":2};
         const pitch = note.slice(0,-1);
         const octave = parseInt(note.slice(-1));
-        return 440 * Math.pow(2, (map[pitch] + (octave - 4) * 12) / 12);
+        const semitone = map[pitch] + (octave - 4) * 12;
+        return 440 * Math.pow(2, semitone / 12);
     }
     
     const fullSong = [
@@ -264,7 +365,7 @@
             const gain = audioContext.createGain();
             osc.type = 'white';
             osc.frequency.value = 100 + Math.random() * 200;
-            gain.gain.value = 0.03;
+            gain.gain.value = 0.03 + Math.random() * 0.05;
             osc.connect(gain);
             gain.connect(rainGain);
             osc.start();
@@ -293,11 +394,28 @@
         osc.stop(start + duration);
     }
     
+    function playFanfareNote(note, start, duration) {
+        if (note === "R") return;
+        const freq = noteFreq(note) * 0.7;
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = "square";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.35, start + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(musicGain);
+        osc.start(start);
+        osc.stop(start + duration);
+    }
+    
     function playFullSong() {
         if (!audioContext || !isPlaying) return;
         if (currentSongIndex >= fullSong.length) currentSongIndex = 0;
         const [note, len] = fullSong[currentSongIndex];
-        playMusicNote(note, audioContext.currentTime, tempo * len);
+        const now = audioContext.currentTime;
+        playMusicNote(note, now, tempo * len);
         currentSongIndex++;
         songTimeout = setTimeout(playFullSong, tempo * len * 1000);
     }
@@ -321,31 +439,22 @@
         let t = audioContext.currentTime;
         for (let i = 0; i < flagFanfare.length; i++) {
             const [note, dur] = flagFanfare[i];
-            const freq = noteFreq(note) * 0.7;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.type = "square";
-            osc.frequency.value = freq;
-            gain.gain.setValueAtTime(0.0001, t);
-            gain.gain.exponentialRampToValueAtTime(0.35, t + 0.01);
-            gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-            osc.connect(gain);
-            gain.connect(musicGain);
-            osc.start(t);
-            osc.stop(t + dur);
+            playFanfareNote(note, t, dur);
             t += dur;
         }
     }
     
     function startMusic() {
         if (!audioContext) initAudio();
-        if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+        if (audioContext && audioContext.state === 'suspended') { audioContext.resume(); }
         if (isPlaying) return;
         isPlaying = true;
         currentSongIndex = 0;
         if (songTimeout) clearTimeout(songTimeout);
         playFullSong();
     }
+    
+    function stopMusic() { isPlaying = false; if (songTimeout) clearTimeout(songTimeout); }
     
     function playCoinSound() {
         if (!audioContext) return;
@@ -363,12 +472,13 @@
     
     function playPowerUpSound() {
         if (!audioContext) return;
-        [261.63, 329.63, 392.00].forEach((f, i) => {
+        const notes = [261.63, 329.63, 392.00];
+        for (let i = 0; i < notes.length; i++) {
             setTimeout(() => {
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
                 osc.type = 'square';
-                osc.frequency.value = f;
+                osc.frequency.value = notes[i];
                 gain.gain.value = 0.3;
                 osc.connect(gain);
                 gain.connect(audioContext.destination);
@@ -376,7 +486,7 @@
                 gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.15);
                 osc.stop(audioContext.currentTime + 0.15);
             }, i * 80);
-        });
+        }
     }
     
     function playBlockHitSound() {
@@ -421,7 +531,7 @@
         osc.stop(audioContext.currentTime + 0.4);
     }
     
-    // CENÁRIOS
+    // ========== CENÁRIOS ==========
     let rainDrops = [];
     let cameraX = 0;
     let worldWidth = 12000;
@@ -490,7 +600,7 @@
         const hasSun = !isNight && (phase % 4 === 1) && !hasRain;
         const hasClouds = (phase % 3 !== 0) && !hasRain;
         
-        if (hasRain && !rainDrops.length) createRain();
+        if (hasRain && !rainDrops.length) { createRain(); } 
         else if (!hasRain && rainDrops.length) { rainDrops = []; stopRainSound(); }
         
         if (isNight) {
@@ -498,11 +608,15 @@
             grad.addColorStop(0, "#0a0a2a"); grad.addColorStop(1, "#1a1a3a");
             ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
             ctx.fillStyle = "#ffffffaa";
-            for (let i = 0; i < 60; i++) ctx.fillRect((i * 131) % W, (i * 253) % 200, (i % 3) + 1, (i % 3) + 1);
+            for (let i = 0; i < 60; i++) { ctx.fillRect((i * 131) % W, (i * 253) % 200, (i % 3) + 1, (i % 3) + 1); }
             if (hasMoon) {
                 ctx.fillStyle = "#ffffdd";
                 ctx.beginPath();
                 ctx.ellipse(W - 80, 70, 35, 35, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = "#ffffee";
+                ctx.beginPath();
+                ctx.ellipse(W - 75, 65, 28, 28, 0, 0, Math.PI*2);
                 ctx.fill();
             }
         } else {
@@ -520,9 +634,13 @@
                 ctx.fill();
                 for (let i = 0; i < 12; i++) {
                     let angle = i * Math.PI * 2 / 12;
+                    let x1 = W - 80 + Math.cos(angle) * 55;
+                    let y1 = 70 + Math.sin(angle) * 55;
+                    let x2 = W - 80 + Math.cos(angle) * 75;
+                    let y2 = 70 + Math.sin(angle) * 75;
                     ctx.beginPath();
-                    ctx.moveTo(W - 80 + Math.cos(angle) * 55, 70 + Math.sin(angle) * 55);
-                    ctx.lineTo(W - 80 + Math.cos(angle) * 75, 70 + Math.sin(angle) * 75);
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
                     ctx.lineWidth = 3;
                     ctx.strokeStyle = "#ffcc44";
                     ctx.stroke();
@@ -546,6 +664,7 @@
         
         ctx.fillStyle = "#3a6a1a";
         ctx.fillRect(0, GROUND_Y - 12, W, 18);
+        ctx.fillStyle = "#2a5a0a";
         for (let i = 0; i < 18; i++) {
             ctx.fillRect((i * 65) - (cameraX * 0.5) % 65, GROUND_Y - 10, 3, 7);
         }
@@ -569,10 +688,10 @@
             }
         }
         
-        if (hasRain) drawRain();
+        if (hasRain) { drawRain(); }
     }
     
-    // ESTADO DO JOGO
+    // ========== ESTADO DO JOGO ==========
     let currentPhase = 1;
     let totalScore = 0;
     let totalCoins = 0;
@@ -826,7 +945,8 @@
         ctx.fillStyle = "#FF0000";
         ctx.fillRect(dx + 10, flagGuardian.y - 15, 65, 8);
         ctx.fillStyle = "#00FF00";
-        ctx.fillRect(dx + 10, flagGuardian.y - 15, 65 * ((50 - flagGuardian.hits) / 50), 8);
+        let life = (50 - flagGuardian.hits) / 50;
+        ctx.fillRect(dx + 10, flagGuardian.y - 15, 65 * Math.max(0, life), 8);
         ctx.fillStyle = "#FFF";
         ctx.font = "bold 9px monospace";
         ctx.fillText(`💪 ${50 - flagGuardian.hits}`, dx + 25, flagGuardian.y - 17);
@@ -847,19 +967,62 @@
         }
     }
     
+    // ========== TELA DE RESULTADO COM CONTAGEM DE MOEDAS E SOM ==========
     function showResultScreen() {
         showingResult = true;
         gameActive = false;
         restoreMusicVolume();
+        
         const collectedCoins = coins.filter(c => c.collected).length;
         const bonus = collectedCoins * 25;
-        totalScore += bonus;
-        updateUI();
         
         const overlay = document.createElement('div');
         overlay.className = 'result-overlay';
-        overlay.innerHTML = `<div class="result-box"><h1>🏆 FASE COMPLETA! 🏆</h1><div class="coin-count">${collectedCoins} moedas</div><div>+${bonus} pontos</div><button class="next-btn" id="nextPhaseBtn">⭐ PRÓXIMA FASE ⭐</button></div>`;
+        overlay.innerHTML = `
+            <div class="result-box">
+                <h1>🏆 FASE COMPLETA! 🏆</h1>
+                <div style="font-size: 18px;">MOEDAS COLETADAS:</div>
+                <div class="coin-count" id="coinCountDisplay">0</div>
+                <div id="coinSoundCounter" style="font-size: 14px; margin-top: 10px;">🪙 Contando moedas...</div>
+                <button class="next-btn" id="nextPhaseBtn">⭐ PRÓXIMA FASE ⭐</button>
+            </div>
+        `;
         document.body.appendChild(overlay);
+        
+        const coinDisplay = document.getElementById('coinCountDisplay');
+        const soundDiv = document.getElementById('coinSoundCounter');
+        let currentCount = 0;
+        coinDisplay.innerText = currentCount;
+        
+        function playNextCoin() {
+            if (currentCount < collectedCoins) {
+                currentCount++;
+                coinDisplay.innerText = currentCount;
+                playCoinSound();  // Som de moeda a cada contagem
+                soundDiv.innerHTML = `🪙 ${currentCount}/${collectedCoins} moedas!`;
+                setTimeout(playNextCoin, 50);
+            } else {
+                soundDiv.innerHTML = `✅ TOTAL: ${collectedCoins} moedas! +${bonus} pontos! 🎉`;
+                totalScore += bonus;
+                updateUI();
+                // Toca um som de fanfarra curta ao finalizar
+                if(audioContext) {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.type = 'square';
+                    osc.frequency.value = 880;
+                    gain.gain.value = 0.3;
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.start();
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
+                    osc.stop(audioContext.currentTime + 0.3);
+                }
+            }
+        }
+        
+        setTimeout(playNextCoin, 100);
+        
         document.getElementById('nextPhaseBtn').onclick = () => {
             overlay.remove();
             showingResult = false;
@@ -868,10 +1031,43 @@
                 phaseAttempts = 3;
                 loadPhase(currentPhase);
             } else {
-                alert("🏆 PARABÉNS! VOCÊ ZEROU O JOGO! 🏆");
+                alert("🏆 PARABÉNS PRINCESA EMANUELLY! VOCÊ ZEROU O JOGO! 🏆");
                 location.reload();
             }
         };
+    }
+    
+    function updateBirds() {
+        for (let b of birds) {
+            b.x += b.speed;
+            if (b.x > worldWidth + 200) b.x = -100;
+            b.wing += 0.15;
+        }
+    }
+    
+    function drawBirds() {
+        for (let b of birds) {
+            let dx = b.x - cameraX;
+            if (dx < -50 || dx > W + 50) continue;
+            ctx.fillStyle = "#444";
+            ctx.beginPath();
+            ctx.ellipse(dx, b.y, b.size, b.size/1.5, 0, 0, Math.PI*2);
+            ctx.fill();
+            const wingY = Math.sin(b.wing) > 0 ? -4 : 3;
+            ctx.fillStyle = "#666";
+            ctx.beginPath();
+            ctx.moveTo(dx - b.size, b.y);
+            ctx.lineTo(dx - b.size - 5, b.y + wingY);
+            ctx.lineTo(dx - b.size, b.y + 1);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(dx + b.size, b.y);
+            ctx.lineTo(dx + b.size + 5, b.y + wingY);
+            ctx.lineTo(dx + b.size, b.y + 1);
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(dx + b.size/2, b.y - 2, 2, 2);
+        }
     }
     
     function handleCollisions() {
@@ -1004,7 +1200,7 @@
             return;
         }
         
-        for (let b of birds) { b.x += b.speed; if (b.x > worldWidth + 200) b.x = -100; b.wing += 0.15; }
+        updateBirds();
         updateTorches();
         updateFlagGuardian();
         
@@ -1096,31 +1292,6 @@
         }
     }
     
-    function drawBirds() {
-        for (let b of birds) {
-            let dx = b.x - cameraX;
-            if (dx < -50 || dx > W + 50) continue;
-            ctx.fillStyle = "#444";
-            ctx.beginPath();
-            ctx.ellipse(dx, b.y, b.size, b.size/1.5, 0, 0, Math.PI*2);
-            ctx.fill();
-            const wingY = Math.sin(b.wing) > 0 ? -4 : 3;
-            ctx.fillStyle = "#666";
-            ctx.beginPath();
-            ctx.moveTo(dx - b.size, b.y);
-            ctx.lineTo(dx - b.size - 5, b.y + wingY);
-            ctx.lineTo(dx - b.size, b.y + 1);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(dx + b.size, b.y);
-            ctx.lineTo(dx + b.size + 5, b.y + wingY);
-            ctx.lineTo(dx + b.size, b.y + 1);
-            ctx.fill();
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(dx + b.size/2, b.y - 2, 2, 2);
-        }
-    }
-    
     function drawMarioVisual() {
         if (player.invincible > 0 && (Math.floor(Date.now() / 60) % 3 === 0)) return;
         let x = player.x - cameraX;
@@ -1192,9 +1363,9 @@
     function drawTitleVisual() {
         ctx.font = "bold 14px 'Courier New'";
         ctx.fillStyle = "#000";
-        ctx.fillRect(10, 10, 260, 28);
+        ctx.fillRect(10, 10, 280, 28);
         ctx.strokeStyle = "#ff69b4";
-        ctx.strokeRect(10, 10, 260, 28);
+        ctx.strokeRect(10, 10, 280, 28);
         ctx.fillStyle = "#fff";
         ctx.fillText("⭐ PRINCESA EMANUELLY ⭐", 15, 30);
         ctx.font = "8px monospace";
@@ -1242,8 +1413,17 @@
         if (e.key === 'ArrowUp' || e.key === ' ') jumpPressed = false;
     };
     
-    function enableAudio() { initAudio(); startMusic(); document.body.removeEventListener('click', enableAudio); }
+    let audioEnabled = false;
+    function enableAudio() {
+        if (audioEnabled) return;
+        audioEnabled = true;
+        initAudio();
+        startMusic();
+        document.body.removeEventListener('click', enableAudio);
+        document.body.removeEventListener('touchstart', enableAudio);
+    }
     document.body.addEventListener('click', enableAudio);
+    document.body.addEventListener('touchstart', enableAudio);
     
     loadPhase(1);
     function gameLoop() { updateGame(); render(); requestAnimationFrame(gameLoop); }
